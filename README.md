@@ -1,5 +1,5 @@
 # PredictStudentScores
-Linear regression for predicting scores for student free-text responses.
+Linear regression for predicting scores for student free-text responses. Uses uni/bigrams and response length as features
 
 # Running the program
 ```
