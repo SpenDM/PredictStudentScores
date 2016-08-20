@@ -10,13 +10,12 @@ test_response_file = r"Data\test_responses.p"
 test_score_file = r"Data\test_scores.p"
 
 # Training
-regression_model_file = r"Model\regression_model.m"
+regression_model_file = r"Model\model.m"
 feature_map_file = r"Model\feature_map.m"
 
 # Feature Compression
 NUMBER = "NUMBER"
 
 # Results
-test_predictions_file = "Results\test_predicitions.txt"
-evaluation_file = "Results\evaluation.txt"
+evaluation_file = r"Results\evaluation.txt"
 max_score = 5
