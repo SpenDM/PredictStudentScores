@@ -1,7 +1,5 @@
 << Assumptions >>
  - for the sake of time, the system will only provide useful function given the following are true -
 
-Scores given will match the order of the responses.
-There are no missing responses/scores (extra ones for either at the end are ignored, warning given).
-
-There are at least two instances in the data.
+If there are scores, they match the number and order of responses.
+There are at least 2 instances in the training data if training and at least 5 if testing.
