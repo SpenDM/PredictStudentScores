@@ -14,13 +14,16 @@ def main():
     # get data
     responses, scores = load_train_data()
 
-    # train model
-    features = Features.get_features(responses)
-    classifier, feature_map = train_regression_model(features, scores)
+    if responses and scores:
+        # train model
+        features = Features.get_features(responses)
+        classifier, feature_map = train_regression_model(features, scores)
 
-    # Write models to file
-    joblib.dump(classifier, regression_model_file)
-    _pickle.dump(feature_map, open(feature_map_file, "wb"))
+        # Write models to file
+        joblib.dump(classifier, regression_model_file)
+        _pickle.dump(feature_map, open(feature_map_file, "wb"))
+    else:
+        sys.stderr.write("Error: no labeled data found.")
 
 
 def train_regression_model(feature_dicts, labels):

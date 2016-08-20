@@ -13,11 +13,12 @@ def main(filename):
     # Parse file
     responses, scores = parse_data_file(data_file_lines)
 
-    # Ensure responses and scores match in length
-    responses, scores = even_out_responses_and_scores(responses, scores)
-
-    # Split into train and test
-    split_train_and_test(responses, scores)
+    # Split into train and test if there are labels
+    if scores:
+        split_train_and_test(responses, scores)
+    # Otherwise output responses
+    else:
+        _pickle.dump(responses, open(response_file, "wb"))
 
 
 def get_file_lines(filename):
@@ -50,6 +51,10 @@ def parse_data_file(data_file_lines):
         if line:
             # Update responses and scores with info from line
             in_response, in_scores = check_for_response_line_content(line, in_response, in_scores, response, responses)
+
+    # Add the last response if this wasn't done when scores were found
+    if response and not in_scores:
+        finish_previous_response_and_begin_new(response, responses)
 
     return responses, scores
 

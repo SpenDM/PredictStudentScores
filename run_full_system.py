@@ -1,8 +1,8 @@
 import load_data, train_model, predict_scores
-from Utilities.Globals import data_file
+from Utilities.Globals import labeled_data_file
 
 print("Loading Data")
-load_data.main(data_file)
+load_data.main(labeled_data_file)
 
 print("Training regression model")
 train_model.main()

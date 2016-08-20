@@ -7,11 +7,12 @@ from sklearn.externals import joblib
 
 from Utilities.Globals import *
 from Utilities import Features
+import load_data
 
 
-def main():
+def main(evaluation_mode=True):
     # get data
-    responses, scores = load_execution_data()
+    responses, scores = load_execution_data(evaluation_mode)
 
     # load model
     model, feature_map = load_regression_model()
@@ -23,8 +24,11 @@ def main():
     rounded_predictions = [round(prediction) for prediction in predictions]
 
     # evaluate if labels are provided
-    if scores:
+    if evaluation_mode and scores:
         evaluate(responses, scores, rounded_predictions)
+    # Output predictions otherwise
+    else:
+        output_execution_results(predictions, responses)
 
 
 def predict_scores(responses, model, feature_map):
@@ -81,25 +85,25 @@ def find_and_output_evaluation(correct, correct_predictions, off_by_n, mistakes)
     accuracies = calculate_accuracies(correct, off_by_n)
 
     # Output results
-    out_file = open(evaluation_file, "w")
+    eval_file = open(evaluation_file, "w")
 
     # Exactly correct
-    out_file.write("Correct: " + str(correct) + "\n")
-    out_file.write("Accuracy: " + str(accuracies[0]) + "\n\n")
+    eval_file.write("Correct: " + str(correct) + "\n")
+    eval_file.write("Accuracy: " + str(accuracies[0]) + "\n\n")
 
     # Off by n
     for n in range(1, max_score):
         correct += off_by_n[n]
-        out_file.write("Off by " + str(n) + ": " + str(off_by_n[n]) + "\n")
-        out_file.write("Off by " + str(n) + " or less: " + str(correct) + "\n")
-        out_file.write("Accuracy: " + str(accuracies[n]) + "\n\n")
+        eval_file.write("Off by " + str(n) + ": " + str(off_by_n[n]) + "\n")
+        eval_file.write("Off by " + str(n) + " or less: " + str(correct) + "\n")
+        eval_file.write("Accuracy: " + str(accuracies[n]) + "\n\n")
 
     # Output specific predictions
-    out_file.write("Mistakes:\n")
-    output_predictions(mistakes, out_file)
+    eval_file.write("Mistakes:\n")
+    output_predictions(mistakes, eval_file)
 
-    out_file.write("\nCorrect:\n")
-    output_predictions(correct_predictions, out_file)
+    eval_file.write("\nCorrect:\n")
+    output_predictions(correct_predictions, eval_file)
 
 
 def calculate_accuracies(correct, off_by_n):
@@ -131,6 +135,12 @@ def output_predictions(predictions, out_file):
         out_file.write(str(prediction[0]) + " " + str(prediction[1]) + " " + str(prediction[2]) + "\n")
 
 
+def output_execution_results(predictions, responses):
+    with open(predictions_file, "w") as file:
+        for prediction, response in zip(predictions, responses):
+            file.write(str(round(prediction)) + " \t" + response + "\n")
+
+
 def load_regression_model():
     model = None
     feature_map = None
@@ -145,24 +155,35 @@ def load_regression_model():
     return model, feature_map
 
 
-def load_execution_data():
+def load_execution_data(evaluation_mode):
     responses = []
     scores = []
 
-    # Student responses
-    try:
-        responses = _pickle.load(open(test_response_file, "rb"))
-    except IOError:
-        sys.stderr.write("Can't open training data files. Make sure you have run load_data.py\n")
+    if evaluation_mode:
+        # Student responses
+        try:
+            responses = _pickle.load(open(test_response_file, "rb"))
+        except IOError:
+            sys.stderr.write("Can't open training data files. Make sure you have run load_data.py\n")
 
-    # Scores, if provided
-    try:
-        scores = _pickle.load(open(test_score_file, "rb"))
-    except IOError:
-        print("No scores given for evaluation, only outputting predictions.")
+        # Scores, if provided
+        try:
+            scores = _pickle.load(open(test_score_file, "rb"))
+        except IOError:
+            print("No scores given for evaluation, only outputting predictions.")
+
+    else:
+        # Execution mode
+        try:
+            responses = _pickle.load(open(response_file, "rb"))
+        except IOError:
+            sys.stderr.write("Can't open training data files. Make sure you have run load_data.py\n")
 
     return responses, scores
 
 
 if __name__ == '__main__':
-    main()
+    load_data.main(unlabeled_data_file)
+    eval_mode = False
+
+    main(eval_mode)
