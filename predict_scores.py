@@ -11,7 +11,7 @@ from Utilities import Features
 
 def main():
     # get data
-    responses, scores = load_test_data()
+    responses, scores = load_execution_data()
 
     # load model
     model, feature_map = load_regression_model()
@@ -22,10 +22,9 @@ def main():
     # round predictions to the nearest whole number
     rounded_predictions = [round(prediction) for prediction in predictions]
 
-    # output scores
-
-    # evaluate
-    evaluate(responses, scores, rounded_predictions)
+    # evaluate if labels are provided
+    if scores:
+        evaluate(responses, scores, rounded_predictions)
 
 
 def predict_scores(responses, model, feature_map):
@@ -146,15 +145,21 @@ def load_regression_model():
     return model, feature_map
 
 
-def load_test_data():
+def load_execution_data():
     responses = []
     scores = []
 
+    # Student responses
     try:
         responses = _pickle.load(open(test_response_file, "rb"))
-        scores = _pickle.load(open(train_score_file, "rb"))
     except IOError:
         sys.stderr.write("Can't open training data files. Make sure you have run load_data.py\n")
+
+    # Scores, if provided
+    try:
+        scores = _pickle.load(open(test_score_file, "rb"))
+    except IOError:
+        print("No scores given for evaluation, only outputting predictions.")
 
     return responses, scores
 

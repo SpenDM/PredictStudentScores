@@ -13,7 +13,9 @@ test_score_file = r"Data\test_scores.p"
 regression_model_file = r"Model\model.m"
 feature_map_file = r"Model\feature_map.m"
 
-# Feature Compression
+# Features
+TOTAL_LENGTH = "TOTAL_LEN"
+
 NUMBER = "NUMBER"
 
 # Results

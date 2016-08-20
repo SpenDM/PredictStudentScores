@@ -10,6 +10,7 @@ def get_features(responses):
 
         # Add features for response
         ngram_features(response, response_feats)
+        response_length(response, response_feats)
 
         features.append(response_feats)
 
@@ -58,3 +59,9 @@ def ngram_features(response, response_feats):
 
         two_back_gram = previous_gram
         previous_gram = gram
+
+
+def response_length(response, response_feats):
+    grams = response.split()
+    total_length = len(grams)
+    response_feats[TOTAL_LENGTH] = total_length
