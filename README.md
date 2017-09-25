@@ -1,4 +1,4 @@
-*In Development*
+*--In Development--*
 
 # PredictStudentScores
 Linear regression for predicting scores for student free-text responses. Uses uni/bigrams and response length as features
